@@ -5,7 +5,6 @@
 	"homepage": "https://discord.gg/b7YSRkg",
 	"license": "MIT",
 	"private": false,
-	"node": "14.x"
 	"scripts": {
 		"start": "node main.js"
 	},
