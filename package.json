@@ -16,6 +16,7 @@
 		"js-base64": "^3.6.0",
 		"js-md5": "0.7.3",
 		"lamejs": "^1.2.0",
+		"node-zip": "github:kyriosli/node-zip",
 		"mp3-duration": "^1.1.0",
 		"object-hash": "^2.0.3",
 		"randomstring": "^1.1.5",
