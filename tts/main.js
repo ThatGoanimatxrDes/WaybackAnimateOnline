@@ -127,27 +127,6 @@ module.exports = (voiceName, text) => {
 				);
 				break;
 			}
-			case "voiceforge": {
-				/* Special thanks to ItsCrazyScout for helping us find the new VoiceForge link! */
-				var q = qs.encode({
-					voice: voice.arg,
-					msg: text,
-				});
-				http.get(
-					{
-						host: "localhost",
-						port: "8181",
-						path: `/vfproxy/speech.php?${q}`,
-					},
-					(r) => {
-						var buffers = [];
-						r.on("data", (d) => buffers.push(d));
-						r.on("end", () => res(Buffer.concat(buffers)));
-						r.on("error", rej);
-					}
-				);
-				break;
-			}
 			case "watson": {
 				var q = qs.encode({
 					text: text,
