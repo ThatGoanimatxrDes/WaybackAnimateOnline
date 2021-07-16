@@ -31,3 +31,4 @@ module.exports = function (req, res, url) {
 	res.end(xml);
 	return true;
 };
+ 
