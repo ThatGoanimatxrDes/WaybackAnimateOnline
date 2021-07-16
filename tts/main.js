@@ -127,6 +127,27 @@ module.exports = (voiceName, text) => {
 				);
 				break;
 			}
+			case "voiceforge": {
+				/* Special thanks to ItsCrazyScout for helping us find the new VoiceForge link! */
+				var q = qs.encode({
+					voice: voice.arg,
+					msg: text,
+				});
+				http.get(
+					{
+						host: "localhost",
+						port: "8181",
+						path: `/vfproxy/speech.php?${q}`,
+					},
+					(r) => {
+						var buffers = [];
+						r.on("data", (d) => buffers.push(d));
+						r.on("end", () => res(Buffer.concat(buffers)));
+						r.on("error", rej);
+					}
+				);
+				break;
+			}
 			case "watson": {
 				var q = qs.encode({
 					text: text,
@@ -226,7 +247,7 @@ module.exports = (voiceName, text) => {
                         method: "POST",
                         headers: {
 							"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-							Cookie: "AcaBoxLogged=logged; AcaBoxUsername=goaniwrap; acabox=p21jj8f3gv30hhv0mruvt1fsm3; AcaBoxFirstname=Keegan",
+							Cookie: "AcaBoxLogged=logged; AcaBoxUsername=acaboxuserkeeg; acabox=5v8gucusuhq022ffn4gb9rops5; AcaBoxFirstname=d",
 							Origin: "https://acapela-box.com",
 							Referer: "https://acapela-box.com/AcaBox/index.php",
 							"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.101 Safari/537.36",
@@ -354,60 +375,60 @@ module.exports = (voiceName, text) => {
 				break;
 			}
 			*/
-case "readloud": {
-    const req = https.request(
-        {
-            host: "readloud.net",
-            port: 443,
-            path: voice.arg,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "User-Agent":
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.101 Safari/537.36",
-            },
-        },
-        (r) => {
-            var buffers = [];
-            r.on("data", (d) => buffers.push(d));
-            r.on("end", () => {
-                const html = Buffer.concat(buffers);
-                const beg = html.indexOf("/tmp/");
-                const end = html.indexOf(".mp3", beg) + 4;
-                const sub = html.subarray(beg, end).toString();
-                const loc = `https://readloud.net${sub}`;
+			case "readloud": {
+				const req = https.request(
+					{
+						host: "readloud.net",
+						port: 443,
+						path: voice.arg,
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+							"User-Agent":
+								"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.101 Safari/537.36",
+						},
+					},
+					(r) => {
+						var buffers = [];
+						r.on("data", (d) => buffers.push(d));
+						r.on("end", () => {
+							const html = Buffer.concat(buffers);
+							const beg = html.indexOf("/tmp/");
+							const end = html.indexOf(".mp3", beg) + 4;
+							const sub = html.subarray(beg, end).toString();
+							const loc = `https://readloud.net${sub}`;
 
-                https.get(
-                    {
-                        host: "readloud.net",
-                        path: sub,
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                            "User-Agent":
-                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.101 Safari/537.36",
-                        },
-                    },
-                    (r) => {
-                        buffers = [];
-                        r.on("data", (d) => buffers.push(d));
-                        r.on("end", () => res(Buffer.concat(buffers)));
-                    }
-                );
-            });
-            r.on("error", rej);
-        }
-    );
-    req.end(
-        qs.encode({
-            but1: text,
-            butS: 0,
-            butP: 0,
-            butPauses: 0,
-            but: "Submit",
-        })
-    );
-    break;
-}
+							https.get(
+								{
+									host: "readloud.net",
+									path: sub,
+									headers: {
+										"Content-Type": "application/x-www-form-urlencoded",
+										"User-Agent":
+											"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.101 Safari/537.36",
+									},
+								},
+								(r) => {
+									buffers = [];
+									r.on("data", (d) => buffers.push(d));
+									r.on("end", () => res(Buffer.concat(buffers)));
+								}
+							);
+						});
+						r.on("error", rej);
+					}
+				);
+				req.end(
+					qs.encode({
+						but1: text,
+						butS: 0,
+						butP: 0,
+						butPauses: 0,
+						but: "Submit",
+					})
+				);
+				break;
+			}
 			case "cereproc": {
 				const req = https.request(
 					{
